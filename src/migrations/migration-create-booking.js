@@ -1,8 +1,9 @@
 'use strict';
-
+// /** @type {import('sequelize-cli').Migration} */
 module.exports = {
-  up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('Bookings', {
+  async up(queryInterface, Sequelize) {
+    await queryInterface.createTable('bookings', {
+   
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -10,31 +11,34 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       statusId: {
+        type: Sequelize.STRING
+      },
+      doctorId: {
         type: Sequelize.INTEGER
       },
-      docterId: {
+      patientId: {
         type: Sequelize.INTEGER
       },
       date: {
-        type: Sequelize.DATE
+        type: Sequelize.STRING
       },
       timeType: {
         type: Sequelize.STRING
       },
+      token: {
+        type: Sequelize.STRING
+      },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE,
-        defaultValue: Sequelize.fn('now')
+        type: Sequelize.DATE
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE,
-        defaultValue: Sequelize.fn('now')
+        type: Sequelize.DATE
       }
     });
   },
-
-  down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('Bookings');
+  async down(queryInterface, Sequelize) {
+    await queryInterface.dropTable('bookings');
   }
 };
