@@ -85,8 +85,140 @@ const getAllUser = async (userID) => {
     throw error; // Đảm bảo lỗi được xử lý
   }
 };
+const handleNewUser = async (dataNewUser) => {
+  console.log("dataNewUser:", dataNewUser);
+  try {
+    // Kiểm tra xem email đã tồn tại trong cơ sở dữ liệu chưa
+    let existingUser = await dataBase.Users.findOne({
+      where: { email: dataNewUser.email },
+    });
 
+    if (existingUser) {
+      return {
+        errcode: 2,
+        errmessage: "Email đã tồn tại, vui lòng sử dụng email khác",
+      };
+    }
+
+    // Băm mật khẩu và tạo người dùng mới
+    let hashPasswordFrom = await hashUserPassword(dataNewUser.password);
+    await dataBase.Users.create({
+      email: dataNewUser.email,
+      password: hashPasswordFrom,
+      firstName: dataNewUser.firstname,
+      lastName: dataNewUser.lastname,
+      address: dataNewUser.address,
+      phoneNumber: dataNewUser.phonenumber,
+      gender: dataNewUser.gender == "1" ? true : false,
+      RoleId: dataNewUser.roleId,
+    });
+
+    return {
+      errcode: 0,
+      errmessage: "Tạo tài khoản mới thành công",
+    };
+  } catch (error) {
+    return {
+      errcode: 1,
+      errmessage: "Internal server error",
+      error: error.message,
+    };
+  }
+};
+
+let hashUserPassword = async (plainPassword) => {
+  //Hàm băm mật khẩu
+  try {
+    let salt = await bcrypt.genSalt(10); // Tạo salt
+    let hashpassword = await bcrypt.hash(plainPassword, salt);
+    return hashpassword;
+  } catch (error) {
+    throw new Error(error);
+  }
+}; //Hàm băm mật khẩu
+const deleteUser = async (userID) => {
+  try {
+    // Tìm user theo ID
+    let user = await dataBase.Users.findOne({
+      where: { id: userID },
+    });
+
+    // Kiểm tra nếu không tìm thấy user
+    if (!user) {
+      return {
+        errcode: 1,
+        errmessage: "Không tìm thấy User",
+      };
+    }
+
+    // Xóa user
+    await dataBase.Users.destroy({
+      where: { id: userID },
+    });
+
+    // Trả về phản hồi thành công
+    return {
+      errcode: 0,
+      errmessage: "Xóa User thành công",
+    };
+  } catch (error) {
+    // Bắt lỗi và trả về thông báo lỗi
+    return {
+      errcode: 2,
+      errmessage: "Đã xảy ra lỗi trong quá trình xóa User",
+      error: error.message,
+    };
+  }
+};
+const updateUser = async (dataUpdate) => {
+  try {
+    // Tìm user theo ID
+    let user = await dataBase.Users.findOne({
+      where: { id: dataUpdate.id },
+    });
+
+    // Kiểm tra nếu không tìm thấy user
+    if (!user) {
+      return {
+        errcode: 1,
+        errmessage: "Không tìm thấy User",
+      };
+    }
+
+    // Thay đổi thông tin user
+    await dataBase.Users.update(
+      {
+        email: dataUpdate.email,
+        firstName: dataUpdate.firstname,
+        lastName: dataUpdate.lastname,
+        address: dataUpdate.address,
+        phoneNumber: dataUpdate.phonenumber,
+        gender: dataUpdate.gender == "1" ? true : false,
+        RoleId: dataUpdate.roleId,
+      },
+      {
+        where: { id: dataUpdate.id },
+      }
+    );
+
+    // Trả về phản hồi thành công
+    return {
+      errcode: 0,
+      errmessage: "Cập nhật thông tin thành công",
+    };
+  } catch (error) {
+    // Bắt lỗi và trả về thông báo lỗi
+    return {
+      errcode: 2,
+      errmessage: "Đã xảy ra lỗi trong quá trình cập nhật User",
+      error: error.message,
+    };
+  }
+};
 export default {
   handleUserLogin,
   getAllUser,
+  handleNewUser,
+  deleteUser,
+  updateUser,
 };

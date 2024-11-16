@@ -1,4 +1,5 @@
 import UserService from "../service/UserService";
+import bcrypt from "bcryptjs";
 const handleLogin = async (req, res) => {
   let email = req.body.email;
   let password = req.body.password;
@@ -46,7 +47,47 @@ const handleGetAllUser = async (req, res) => {
     });
   }
 };
+const handleCreateUser = async (req, res) => {
+  try {
+    let message = await UserService.handleNewUser(req.body);
+    if (message.errcode !== 0) {
+      return res.status(400).json(message);
+    }
+    return res.status(200).json(message);
+  } catch (error) {
+    return res.status(500).json({
+      errcode: 1,
+      errmessage: "Internal server error",
+      error: error.message,
+    });
+  }
+};
+const handleEditUser = async (req, res) => {
+  let data = req.body;
+  if (!data || !data.id)
+    return res.status(400).json({
+      errCode: 1,
+      errMessage: "Missing required parameters!",
+    });
+  console.log("dataaaaaaaaaaaaaaaaaaaaaaaa: ", data);
+  let message = await UserService.updateUser(data);
+
+  return res.status(200).json(message);
+};
+const handleDeleteUser = async (req, res) => {
+  if (!req.body.id)
+    return res.status(200).json({
+      errCode: 1,
+      errMessage: "Missing required parameters!",
+    });
+
+  let message = await UserService.deleteUser(req.body);
+  return res.status(200).json(message);
+};
 export default {
   handleLogin,
   handleGetAllUser,
+  handleCreateUser,
+  handleDeleteUser,
+  handleEditUser,
 };
