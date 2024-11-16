@@ -207,7 +207,7 @@ const updateUser = async (dataUpdate) => {
       errmessage: "Cập nhật thông tin thành công",
     };
   } catch (error) {
-    // Bắt lỗi và trả về thông báo lỗi
+    // Bắt lỗi và trả về thông báo lỗi tra ve
     return {
       errcode: 2,
       errmessage: "Đã xảy ra lỗi trong quá trình cập nhật User",

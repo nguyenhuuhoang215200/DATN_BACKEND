@@ -16,8 +16,8 @@ let initWebroutes = (app) => {
   route.post("/api/login", UserController.handleLogin); //Login
   route.get("/api/get-all-user", UserController.handleGetAllUser); //Lấy tất cả user or 1
   route.post("/api/create-user", UserController.handleCreateUser); //Tạo tài khoản
-  route.put("/api/edit-user", UserController.handleEditUser);
-  route.delete("/api/delete-user", UserController.handleDeleteUser);
+  route.put("/api/edit-user", UserController.handleEditUser); //edit user
+  route.delete("/api/delete-user", UserController.handleDeleteUser); //xoa Uers
   return app.use("/", route);
 };
 module.exports = initWebroutes;

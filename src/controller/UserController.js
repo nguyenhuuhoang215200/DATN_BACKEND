@@ -17,6 +17,7 @@ const handleLogin = async (req, res) => {
     user: UserData.user ? UserData.user : {},
   });
 };
+//ham lay danh sach nguoi dung
 const handleGetAllUser = async (req, res) => {
   try {
     // Gọi service để lấy danh sách người dùng
