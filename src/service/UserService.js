@@ -184,17 +184,17 @@ const updateUser = async (dataUpdate) => {
         errmessage: "Không tìm thấy User",
       };
     }
-
+    console.log("---------------------", dataUpdate.email, dataUpdate.id);
     // Thay đổi thông tin user
     await dataBase.Users.update(
       {
         email: dataUpdate.email,
-        firstName: dataUpdate.firstname,
-        lastName: dataUpdate.lastname,
+        firstName: dataUpdate.firstName,
+        lastName: dataUpdate.lastName,
         address: dataUpdate.address,
-        phoneNumber: dataUpdate.phonenumber,
+        phoneNumber: dataUpdate.phoneNumber,
         gender: dataUpdate.gender == "1" ? true : false,
-        RoleId: dataUpdate.roleId,
+        RoleId: dataUpdate.RoleId,
       },
       {
         where: { id: dataUpdate.id },

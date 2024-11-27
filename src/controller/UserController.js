@@ -70,7 +70,6 @@ const handleEditUser = async (req, res) => {
       errCode: 1,
       errMessage: "Missing required parameters!",
     });
-  console.log("dataaaaaaaaaaaaaaaaaaaaaaaa: ", data);
   let message = await UserService.updateUser(data);
 
   return res.status(200).json(message);
@@ -82,7 +81,7 @@ const handleDeleteUser = async (req, res) => {
       errMessage: "Missing required parameters!",
     });
 
-  let message = await UserService.deleteUser(req.body);
+  let message = await UserService.deleteUser(req.body.id);
   return res.status(200).json(message);
 };
 export default {
